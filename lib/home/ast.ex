@@ -1,6 +1,13 @@
 defmodule Home.AST do
   alias Home.AST
-  defstruct [:id, :data, :children]
+  defstruct [:id, :data, :children, :stack]
+
+  def parse(%AST{}=ast, token) do
+    case action_to_take(ast, token) do
+      :new_node -> put_in(ast[:children], ast[:children]++[token])
+      _ -> ast
+    end
+  end
 
   def new(data) do
     %AST{
@@ -13,13 +20,19 @@ defmodule Home.AST do
   def new() do
     %AST{
       id: "",
-      data: nil,
+      data: %{type: "EMPTY"},
       children: []
     }
   end
 
-  def push?(%{type: token_type}) do
+  def action_to_take(%AST{}=ast, %{type: token_type}=token) do
+    last_type = ast.data.type
 
+    case last_type do
+      ^token_type -> :close_node
+      nil -> :new_node
+      _ -> :append
+    end
   end
 
   def add_new_node(%AST{} = ast, node)  do
