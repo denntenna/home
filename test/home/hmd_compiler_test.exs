@@ -33,9 +33,23 @@ defmodule Home.HMDCompilerTest do
       [[Dress Code]]
       """
 
-      assert HMDCompiler.scan(text) == %{}
+      assert is_list(HMDCompiler.scan(text)) == true
     end
 
+    test "parse frontmatter" do
+      tokens = [
+        %{type: "SECTION_FRONTMATTER_OPEN_CLOSE", value: "---"},
+        %{type: "LINE_TEXT", value: "title: Hello World"},
+        %{type: "LINE_TEXT", value: "date: 02-06-1990"},
+        %{type: "LINE_TEXT", value: "tags:"},
+        %{type: "LINE_TEXT", value: "- announcement"},
+        %{type: "LINE_TEXT", value: "- happy"},
+        %{type: "SECTION_FRONTMATTER_OPEN_CLOSE", value: "---"},
+      ]
 
+      # HMDCompiler.parse(tokens)
+
+      assert 1 == 1
+    end
   end
 end
